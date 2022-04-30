@@ -1,37 +1,35 @@
-## Welcome to GitHub Pages
+# Ookla Server KDE Plotting
+This notebook was created to map Ookla server locations as a [**Kernel Density Estimation (KDE)**](https://en.wikipedia.org/wiki/Kernel_density_estimation) geographic map plot. Currently, it maps server locations in the contiguous United States and World Map at varying levels of granularity.
 
-You can use the [editor on GitHub](https://github.com/jonathanlo411/ookla_kdeplotting/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Running Notebook
+The notebook using [Geopandas](https://geopandas.org/en/stable/) and [Geoplot](https://residentmario.github.io/geoplot/). This means that you will need to set up a virtual environment. Personally, I used [this](https://medium.com/analytics-vidhya/fastest-way-to-install-geopandas-in-jupyter-notebook-on-windows-8f734e11fa2b) Medium article by [Tanish Gupta](https://tanish-gupta.medium.com/) to set up my environment. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+To run the notebook:
+1. Activate conda virtual env that has Geopandas by running the following command in Anaconda Prompt
+ ```
+ conda activate yourenv
 ```
+2. Launch notebook menu using:
+```
+jupyter notebook
+```
+3. Navigate to notebook and run
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+## Details
+One of things you'll notice when you look at this repository is the folders `world` and `world_transparent` that contain KDE geoplots of only continents. This is caused by the inability to control the granularity when plotting a KDE geoplot using Geoplot. To remedy this, I...
+1. Plotted points continent by continent and saved the figs to `.png` files.
+2. Drew [transparencies](https://en.wikipedia.org/wiki/Transparency_(graphic)) everywhere on the image except for the mapped area and country borders.
+3. Overlay the images and create a legend/scale using [Figma](https://www.figma.com/).
 
-### Jekyll Themes
+An issue I faced when doing this was the scale. When I plotted continent by continent, each continent would have the same max level of density (regardless of actual density relative to each other).
+![](https://cdn.discordapp.com/attachments/579707526610681857/941869510544220160/unknown.png)
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jonathanlo411/ookla_kdeplotting/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+> Notice how Africa has the same density as Europe and other continents
 
-### Support or Contact
+To fix this, I created individual color scales based on the number of servers on each continent relative to the continent that has the most servers (South America). This allowed the scale to be accurate.
+![](https://cdn.discordapp.com/attachments/579707526610681857/941930535377313852/unknown.png)
+> Africa is considerably less intense compared to before
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Potential Improvements
+1. The world map could have a higher level of granularity. However, this would mean plotting a KDE geoplot for every single country and following the process listed above.
+2. Due to convenience of the packages, I filtered out some countries (Kosovo (XK), East Timor (TL), etc.) . It would be possible to hard code these situations.
